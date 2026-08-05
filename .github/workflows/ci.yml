@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  schedule:
+    # Weekly advisory run against current hermes-agent@main for early
+    # compatibility detection.
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # hermes-agent commit this package is validated against.
+  # Update deliberately; scheduled runs test current main instead.
+  HERMES_PIN: ae6c2e57e12b2f320175e3b9bb1bc13c3402255e
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        # hermes-agent supports >=3.11,<3.14
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out hermes-agent (pinned; main on scheduled runs)
+        uses: actions/checkout@v4
+        with:
+          repository: NousResearch/hermes-agent
+          ref: ${{ github.event_name == 'schedule' && 'main' || env.HERMES_PIN }}
+          path: .hermes-agent
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # The plugin and its tests only need the host source tree on
+      # PYTHONPATH plus pytest/pyyaml — no hermes runtime dependencies,
+      # no network, no credentials.
+      - name: Install test dependencies
+        run: python -m pip install pytest pyyaml
+
+      - name: Run tests
+        env:
+          HERMES_AGENT_REPO: ${{ github.workspace }}/.hermes-agent
+        run: python -m pytest tests -q

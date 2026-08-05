@@ -1,0 +1,18 @@
+# Hermes Agent plugin manifest.
+#
+# `kind: model-provider` routes this package to the providers/ discovery
+# system: Hermes imports `__init__.py` (which calls `register_provider`)
+# from `$HERMES_HOME/plugins/model-providers/<dir>/`. The general
+# PluginManager records the manifest but never imports the module.
+manifest_version: 1
+name: telnyx-provider
+kind: model-provider
+version: 0.1.0-rc.1
+description: Telnyx — OpenAI-compatible inference, hosted open models + frontier routes
+author: Telnyx
+homepage: https://github.com/team-telnyx/hermes-inference-provider
+requires_env:
+  - name: TELNYX_API_KEY
+    description: Telnyx API key (v2)
+    url: https://portal.telnyx.com/#/app/api-keys
+    secret: true
