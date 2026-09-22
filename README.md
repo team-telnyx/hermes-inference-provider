@@ -21,8 +21,8 @@ model-provider plugin surface (`providers.register_provider`).
 - Hermes Agent `>=0.21.4` (Python 3.11–3.13). Hermes `0.21.1` added flat
   provider discovery and switching, but `0.21.4` is the first release that
   correctly normalizes the Telnyx catalog's per-million-token prices.
-- CI guards the `0.21.1` host-capability floor, the minimum fully supported
-  release (`0.21.4`), and current Hermes `main`.
+- CI guards the `0.21.1` host-capability floor and the minimum fully
+  supported release (`0.21.4`) from exact release commits.
 
 ## Install
 

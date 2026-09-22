@@ -5,10 +5,6 @@ on:
     branches: [main]
     tags: ["v*"]
   pull_request:
-  schedule:
-    # Weekly advisory run against current hermes-agent@main for early
-    # compatibility detection.
-    - cron: "17 6 * * 1"
   workflow_dispatch:
 
 permissions:
@@ -23,12 +19,10 @@ jobs:
       matrix:
         # hermes-agent supports >=3.11,<3.14
         python-version: ["3.11", "3.12", "3.13"]
-        # Exact release commits: capability floor and minimum full support,
-        # plus main for early compatibility detection.
+        # Exact release commits: capability floor and minimum full support.
         hermes-ref:
           - 2237be355906fbe6065ce1815711eee52b2d646e  # 0.21.1 / v2026.9.7
           - d337b736aa1e8ebecfab043842d13e4a2d2f48a3  # 0.21.4 / v2026.9.21
-          - main
     steps:
       - uses: actions/checkout@v4
 
