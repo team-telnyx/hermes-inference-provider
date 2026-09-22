@@ -14,11 +14,6 @@ on:
 permissions:
   contents: read
 
-env:
-  # hermes-agent commit this package is validated against.
-  # Update deliberately; scheduled runs test current main instead.
-  HERMES_PIN: ae6c2e57e12b2f320175e3b9bb1bc13c3402255e
-
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -28,14 +23,20 @@ jobs:
       matrix:
         # hermes-agent supports >=3.11,<3.14
         python-version: ["3.11", "3.12", "3.13"]
+        # Exact release commits: capability floor and minimum full support,
+        # plus main for early compatibility detection.
+        hermes-ref:
+          - 2237be355906fbe6065ce1815711eee52b2d646e  # 0.21.1 / v2026.9.7
+          - d337b736aa1e8ebecfab043842d13e4a2d2f48a3  # 0.21.4 / v2026.9.21
+          - main
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check out hermes-agent (pinned; main on scheduled runs)
+      - name: Check out hermes-agent release
         uses: actions/checkout@v4
         with:
           repository: NousResearch/hermes-agent
-          ref: ${{ github.event_name == 'schedule' && 'main' || env.HERMES_PIN }}
+          ref: ${{ matrix.hermes-ref }}
           path: .hermes-agent
 
       - uses: actions/setup-python@v5
