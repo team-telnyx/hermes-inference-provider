@@ -13,7 +13,7 @@ or ``zai-org/GLM-5.2``.
 This is the vendor-maintained external distribution of the provider: it
 lives outside the hermes-agent tree and registers through the documented
 model-provider plugin surface (``providers.register_provider`` at import
-from ``$HERMES_HOME/plugins/model-providers/<dir>/``). See README.md for
+from ``$HERMES_HOME/plugins/<name>/``). See README.md for
 install paths.
 
 Provider quirks, verified live (2026-07; catalog re-verified 2026-08):
